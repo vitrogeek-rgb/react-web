@@ -3,30 +3,32 @@ import '../css/estilo.css'
 
 const Tarefas = () => {
 
+    // HOOK useState - guarda os dados do formulário
     const [nome, setNome] = useState('');
     const [data, setData] = useState('');
     const [descricao, setDescricao] = useState('');
     const [prioridade, setPrioridade] = useState('media');
 
-    //Hook - useState = Manipula o estado da variável
+    // HOOK useState - lista de tarefas; a função inicial lê do localStorage
+    // apenas uma vez, na primeira renderização
     const[tarefas,setTarefas]=useState(()=>{
         const salvarTarefas = localStorage.getItem('item-tarefa');
         return salvarTarefas ? JSON.parse(salvarTarefas) : [];
     });
 
+    // HOOK useState - controla o filtro ativo: 'todas', 'concluidas' ou 'pendentes'
+    const [filtro, setFiltro] = useState('todas');
 
-    //HOOK - useEffect = Realiza o efeito colateral, 
-    //nesse exemplo vai mostrar a tarefa adicionada em tempo real
+    // HOOK useEffect - roda sempre que "tarefas" muda, salvando no localStorage
     useEffect(()=>{
         localStorage.setItem('item-tarefa',JSON.stringify(tarefas))
     }, [tarefas])
 
+    // CALLBACK passado para o onSubmit do form
     const adicionarTarefa = (e)=>{
       //previne que a página recarregue automaticamente
       e.preventDefault();
       //valida se o nome estiver vazio
-
-    
       if(!nome.trim()) return;
 
       //novo objeto
@@ -38,32 +40,42 @@ const Tarefas = () => {
         prioridade: prioridade,
         concluida: false
       }
-      
+
+      // spread (...tarefas) copia a lista atual e adiciona a nova tarefa
       setTarefas([...tarefas,novaTarefa]);
-      setNome('');
       setNome('');
       setData('');
       setDescricao('');
-      setPrioridade('media');}
+      setPrioridade('media');
+    }
 
-      const RemoverTarefa = (id)=>{
-        // verifica se o id da tarefa atual é diferente do id que deseja apagar
-        //se o id atual for igual a condição retorna falso e o item é excluído
-        const apagarTarefa = tarefas.filter((tarefa) => tarefa.id !== id);
-        setTarefas(apagarTarefa);
-      }
-      const marcarConcluida = (id)=>{
-        const tarefasAtualizadas =tarefas.map((tarefa) =>{
-          if (tarefa.id ===id) {
-            return {...tarefa,concluida: !tarefa.concluida};
-          }
-          return tarefa  
-        });
-        setTarefas(tarefasAtualizadas);
-      }
+    // CALLBACK passado para o onClick de "Excluir"
+    const RemoverTarefa = (id)=>{
+      // MÉTODO DE ARRAY .filter() - mantém só as tarefas com id diferente
+      const apagarTarefa = tarefas.filter((tarefa) => tarefa.id !== id);
+      setTarefas(apagarTarefa);
+    }
+
+    // CALLBACK passado para o onClick de "Concluir/Desfazer"
+    const marcarConcluida = (id)=>{
+      // MÉTODO DE ARRAY .map() - percorre tudo e inverte "concluida" só na tarefa certa
+      const tarefasAtualizadas =tarefas.map((tarefa) =>{
+        if (tarefa.id ===id) {
+          return {...tarefa,concluida: !tarefa.concluida};
+        }
+        return tarefa
+      });
+      setTarefas(tarefasAtualizadas);
+    }
+
+    // MÉTODO DE ARRAY .filter() - define o que é exibido, sem alterar "tarefas"
+    const tarefasFiltradas = tarefas.filter((tarefa) => {
+      if (filtro === 'concluidas') return tarefa.concluida;
+      if (filtro === 'pendentes') return !tarefa.concluida;
+      return true; // 'todas'
+    });
 
 
-    
   return (
     <div>
       <h1>Minha lista de tarefas</h1>
@@ -103,8 +115,31 @@ const Tarefas = () => {
         <button type='submit'>Adicionar</button>
       </form>
 
+      {/* Filtros rápidos - cada botão é um callback que atualiza "filtro" */}
+      <div className='filtros'>
+        <button
+          onClick={() => setFiltro('todas')}
+          disabled={filtro === 'todas'}
+        >
+          Todas
+        </button>
+        <button
+          onClick={() => setFiltro('concluidas')}
+          disabled={filtro === 'concluidas'}
+        >
+          Concluídas
+        </button>
+        <button
+          onClick={() => setFiltro('pendentes')}
+          disabled={filtro === 'pendentes'}
+        >
+          Pendentes
+        </button>
+      </div>
+
       <ul className='space-y-3'>
-        {tarefas.map((tarefa)=>(
+        {/* MÉTODO DE ARRAY .map() - transforma cada tarefa em um <li> */}
+        {tarefasFiltradas.map((tarefa)=>(
           <li key={tarefa.id}>
 
             <button onClick={() => marcarConcluida(tarefa.id)}>
@@ -113,12 +148,11 @@ const Tarefas = () => {
 
             {tarefa.concluida ? <del><span>{tarefa.texto} {tarefa.data} {tarefa.descricao} {tarefa.prioridade}</span></del> : <span>{tarefa.texto} {tarefa.data} {tarefa.descricao} {tarefa.prioridade}</span>}
 
-            
             <button onClick={()=>RemoverTarefa(tarefa.id)}>Excluir</button>
           </li>
         ))}
       </ul>
-      {tarefas.length === 0 && <p>Nenhuma tarefa salva</p>}
+      {tarefasFiltradas.length === 0 && <p>Nenhuma tarefa {filtro !== 'todas' ? filtro : 'salva'}</p>}
     </div>
   )
 }
