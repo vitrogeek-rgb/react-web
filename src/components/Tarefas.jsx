@@ -77,15 +77,20 @@ const Tarefas = () => {
 
 
   return (
-    <div>
-      <h1>Minha lista de tarefas</h1>
-      <form onSubmit={adicionarTarefa}>
+    <div className='min-h-screen bg-[#F3E8D7] text-[3D2B1F] px-6 py-10'>
+      <div className="max-w-2xl mx-auto"></div>
+      <h1 className='text-2xl font-semibold mb-6'>Minha lista de tarefas</h1>
+      <form onSubmit={adicionarTarefa}
+      className='bg-[#FBF6ED] boder border-[E0D2B8] rounded-lg p-6 mb-6 flex flex-wrap
+      gap-3 items-center'>
         <input //Pede o nome da tarefa
           type="text"
           value={nome}
           onChange={(e)=>setNome(e.target.value)}
           placeholder='Digite sua tarefa'
-        />
+          className='flex-1 min-w-45 bg-[#F3E8D7] border border-[#E0D2B8] rounded-md px-4 py-2.5
+          text-[#3D2B1F] placeholder-[#7A6752] focus:outline-none focus:ring-2 focus:ring-[#C1443A]'
+/>
 
         <input type="Date" //Pede a data
           value={data}
