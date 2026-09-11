@@ -133,27 +133,44 @@ const Tarefas = () => {
           />
         </form>
 
-        <div className='filtros'>
-          <button
-            onClick={() => setFiltro('todas')}
-            disabled={filtro === 'todas'}
-          >
-            Todas
-          </button>
-          <button
-            onClick={() => setFiltro('concluidas')}
-            disabled={filtro === 'concluidas'}
-          >
-            Concluídas
-          </button>
-          <button
-            onClick={() => setFiltro('pendentes')}
-            disabled={filtro === 'pendentes'}
-          >
-            Pendentes
-          </button>
-        </div>
+       <div className='flex gap-3 mb-6'>
+        <button
+          onClick={() => setFiltro('todas')}
+          disabled={filtro === 'todas'}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            filtro === 'todas'
+              ? 'bg-[#C1443A] text-white'
+              : 'bg-[#FBF6ED] border border-[#E0D2B8] text-[#7A6752]'
+          }`}
+        >
+          Todas
+        </button>
 
+        <button
+          onClick={() => setFiltro('concluidas')}
+          disabled={filtro === 'concluidas'}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            filtro === 'concluidas'
+              ? 'bg-[#C1443A] text-white'
+              : 'bg-[#FBF6ED] border border-[#E0D2B8] text-[#7A6752]'
+          }`}
+        >
+          Concluídas
+        </button>
+
+        <button
+          onClick={() => setFiltro('pendentes')}
+          disabled={filtro === 'pendentes'}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            filtro === 'pendentes'
+              ? 'bg-[#C1443A] text-white'
+              : 'bg-[#FBF6ED] border border-[#E0D2B8] text-[#7A6752]'
+          }`}
+        >
+          Pendentes
+        </button>
+      </div>
+      
         <ul className='space-y-3'>
           {/* MÉTODO DE ARRAY .map() - transforma cada tarefa em um <li> */}
           {tarefasFiltradas.map((tarefa)=>(
