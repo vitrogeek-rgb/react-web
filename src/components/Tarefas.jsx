@@ -71,7 +71,7 @@ const Tarefas = () => {
     // MÉTODO DE ARRAY .filter() - define o que é exibido, sem alterar "tarefas"
     const tarefasFiltradas = tarefas.filter((tarefa) => {
       if (filtro === 'concluidas') return tarefa.concluida;
-      if (filtro === 'pendentes') return !tarefa.concluida;
+      if (filtro === 'pendente') return !tarefa.concluida;
       return true; // 'todas'
     });
 
@@ -159,32 +159,67 @@ const Tarefas = () => {
         </button>
 
         <button
-          onClick={() => setFiltro('pendentes')}
-          disabled={filtro === 'pendentes'}
+          onClick={() => setFiltro('pendente')}
+          disabled={filtro === 'pendente'}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-            filtro === 'pendentes'
+            filtro === 'pendente'
               ? 'bg-[#C1443A] text-white'
               : 'bg-[#FBF6ED] border border-[#E0D2B8] text-[#7A6752]'
           }`}
         >
-          Pendentes
+          Pendente
         </button>
       </div>
-      
+
         <ul className='space-y-3'>
           {/* MÉTODO DE ARRAY .map() - transforma cada tarefa em um <li> */}
-          {tarefasFiltradas.map((tarefa)=>(
-            <li key={tarefa.id}>
+          {tarefasFiltradas.map((tarefa)=>{
+            const corPrioridade = {
+              minima: '#C9B79C',
+              baixa: '#A98A63',
+              media: '#8B6238',
+              alta: '#A85033',
+              urgente: '#C1443A',
+            }[tarefa.prioridade];
 
-              <button onClick={() => marcarConcluida(tarefa.id)}>
-                  {tarefa.concluida ? 'Desfazer':'Concluir'}
-              </button>
+            return (
+              <li
+                key={tarefa.id}
+                className='bg-[#FBF6ED] border border-[#E0D2B8] rounded-lg p-4 flex items-center gap-4'
+              >
+                <button
+                  onClick={() => marcarConcluida(tarefa.id)}
+                  className={tarefa.concluida
+                    ? 'w-6 h-6 rounded-full border-2 border-[#C1443A] bg-[#C1443A] text-white flex items-center justify-center text-xs shrink-0'
+                    : 'w-6 h-6 rounded-full border-2 border-[#C1443A] bg-transparent text-[#C1443A] flex items-center justify-center text-xs shrink-0'
+                  }
+                  aria-label={tarefa.concluida ? 'Desfazer conclusão' : 'Marcar como concluída'}
+                >
+                  ✓
+                </button>
 
-              {tarefa.concluida ? <del><span>{tarefa.texto} {tarefa.data} {tarefa.descricao} {tarefa.prioridade}</span></del> : <span>{tarefa.texto} {tarefa.data} {tarefa.descricao} {tarefa.prioridade}</span>}
+                <div className='flex-1'>
+                  {tarefa.concluida ? (
+                    <del className='text-[#7A6752]'>{tarefa.texto}</del>
+                  ) : (
+                    <span className='font-medium text-[#3D2B1F]'>{tarefa.texto}</span>
+                  )}
+                  <p className='text-sm text-[#7A6752]'>{tarefa.data} · {tarefa.descricao}</p>
+                </div>
 
-              <button onClick={()=>RemoverTarefa(tarefa.id)}>Excluir</button>
-            </li>
-          ))}
+                <span
+                  className='px-3 py-1 rounded-full text-xs font-semibold text-white capitalize'
+                  style={{ backgroundColor: corPrioridade }}
+                >
+                  {tarefa.prioridade}
+                </span>
+
+                <button onClick={()=>RemoverTarefa(tarefa.id)} className='text-sm text-[#7A6752] hover:text-[#C1443A]'>
+                  Excluir
+                </button>
+              </li>
+            );
+          })}
         </ul>
         {tarefasFiltradas.length === 0 && <p>Nenhuma tarefa {filtro !== 'todas' ? filtro : 'salva'}</p>}
       </div>
