@@ -77,87 +77,100 @@ const Tarefas = () => {
 
 
   return (
-    <div className='min-h-screen bg-[#F3E8D7] text-[3D2B1F] px-6 py-10'>
-      <div className="max-w-2xl mx-auto"></div>
-      <h1 className='text-2xl font-semibold mb-6'>Minha lista de tarefas</h1>
-      <form onSubmit={adicionarTarefa}
-      className='bg-[#FBF6ED] boder border-[E0D2B8] rounded-lg p-6 mb-6 flex flex-wrap
-      gap-3 items-center'>
-        <input //Pede o nome da tarefa
-          type="text"
-          value={nome}
-          onChange={(e)=>setNome(e.target.value)}
-          placeholder='Digite sua tarefa'
-          className='flex-1 min-w-45 bg-[#F3E8D7] border border-[#E0D2B8] rounded-md px-4 py-2.5
-          text-[#3D2B1F] placeholder-[#7A6752] focus:outline-none focus:ring-2 focus:ring-[#C1443A]'
-/>
+    <div className='min-h-screen bg-[#F3E8D7] text-[#3D2B1F] px-6 py-10'>
+      <div className="max-w-2xl mx-auto">
+        <h1 className='text-2xl font-semibold mb-6'>Minha lista de tarefas</h1>
 
-        <input type="Date" //Pede a data
-          value={data}
-          onChange={(e)=>setData(e.target.value)}
-          placeholder='Data'
-        />
+        <form
+          onSubmit={adicionarTarefa}
+          className='bg-[#FBF6ED] border border-[#E0D2B8] rounded-lg p-6 mb-6 flex flex-wrap gap-3 items-center'
+        >
+          <input //Pede o nome da tarefa
+            type="text"
+            value={nome}
+            onChange={(e)=>setNome(e.target.value)}
+            placeholder='Digite sua tarefa'
+            className='flex-1 min-w-45 bg-[#F3E8D7] border border-[#E0D2B8] rounded-md px-4 py-2.5 text-[#3D2B1F] 
+            placeholder-[#7A6752] focus:outline-none focus:ring-2 focus:ring-[#C1443A]'
+          />
 
-        <textarea //Pede descrição da tarefa
-          value={descricao} 
-          onChange={(e)=>setDescricao(e.target.value)}
-          placeholder='Descreva a tarefa'
-        />
-        <label htmlFor="prioridade">Prioridade</label>
-        <select
-          id="prioridade"
-          value={prioridade}
-          onChange={(e)=>setPrioridade(e.target.value)}
-         > 
-        {/* Mostra opções que podem ser selecionadas dentro das prioridades */}
-          <option value="minima">Mínima</option>
-          <option value="baixa">Baixa</option>
-          <option value="media">Média</option>
-          <option value="alta">Alta</option>
-          <option value="urgente">Urgente</option>
-         </select>
-       
-        <button type='submit'>Adicionar</button>
-      </form>
+          <input type="Date" //Pede a data
+            value={data}
+            onChange={(e)=>setData(e.target.value)}
+            placeholder='Data'
+            className='bg-[#F3E8D7] border border-[#E0D2B8] rounded-md px-4 py-2.5 text-[#3D2B1F] focus:outline-none 
+            focus:ring-2 focus:ring-[#C1443A]'
+          />
 
-      {/* Filtros rápidos - cada botão é um callback que atualiza "filtro" */}
-      <div className='filtros'>
-        <button
-          onClick={() => setFiltro('todas')}
-          disabled={filtro === 'todas'}
-        >
-          Todas
-        </button>
-        <button
-          onClick={() => setFiltro('concluidas')}
-          disabled={filtro === 'concluidas'}
-        >
-          Concluídas
-        </button>
-        <button
-          onClick={() => setFiltro('pendentes')}
-          disabled={filtro === 'pendentes'}
-        >
-          Pendentes
-        </button>
+          <select
+            id="prioridade"
+            value={prioridade}
+            onChange={(e)=>setPrioridade(e.target.value)}
+            className='bg-[#F3E8D7] border border-[#E0D2B8] rounded-md px-4 py-2.5 text-[#3D2B1F] focus:outline-none 
+            focus:ring-2 focus:ring-[#C1443A]'
+          >
+          {/* Mostra opções que podem ser selecionadas dentro das prioridades */}
+            <option value="minima">Mínima</option>
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
+            <option value="urgente">Urgente</option>
+          </select>
+
+          <button
+            type='submit'
+            className='bg-[#C1443A] hover:bg-[#A83428] text-white font-semibold px-6 py-2.5 rounded-md transition-colors'
+          >
+            Adicionar
+          </button>
+
+          <textarea //Pede descrição da tarefa
+            value={descricao}
+            onChange={(e)=>setDescricao(e.target.value)}
+            placeholder='Descreva a tarefa'
+            className='w-full bg-[#F3E8D7] border border-[#E0D2B8] rounded-md px-4 py-2.5 text-[#3D2B1F] placeholder-[#7A6752]
+            focus:outline-none focus:ring-2 focus:ring-[#C1443A]'
+          />
+        </form>
+
+        <div className='filtros'>
+          <button
+            onClick={() => setFiltro('todas')}
+            disabled={filtro === 'todas'}
+          >
+            Todas
+          </button>
+          <button
+            onClick={() => setFiltro('concluidas')}
+            disabled={filtro === 'concluidas'}
+          >
+            Concluídas
+          </button>
+          <button
+            onClick={() => setFiltro('pendentes')}
+            disabled={filtro === 'pendentes'}
+          >
+            Pendentes
+          </button>
+        </div>
+
+        <ul className='space-y-3'>
+          {/* MÉTODO DE ARRAY .map() - transforma cada tarefa em um <li> */}
+          {tarefasFiltradas.map((tarefa)=>(
+            <li key={tarefa.id}>
+
+              <button onClick={() => marcarConcluida(tarefa.id)}>
+                  {tarefa.concluida ? 'Desfazer':'Concluir'}
+              </button>
+
+              {tarefa.concluida ? <del><span>{tarefa.texto} {tarefa.data} {tarefa.descricao} {tarefa.prioridade}</span></del> : <span>{tarefa.texto} {tarefa.data} {tarefa.descricao} {tarefa.prioridade}</span>}
+
+              <button onClick={()=>RemoverTarefa(tarefa.id)}>Excluir</button>
+            </li>
+          ))}
+        </ul>
+        {tarefasFiltradas.length === 0 && <p>Nenhuma tarefa {filtro !== 'todas' ? filtro : 'salva'}</p>}
       </div>
-
-      <ul className='space-y-3'>
-        {/* MÉTODO DE ARRAY .map() - transforma cada tarefa em um <li> */}
-        {tarefasFiltradas.map((tarefa)=>(
-          <li key={tarefa.id}>
-
-            <button onClick={() => marcarConcluida(tarefa.id)}>
-                {tarefa.concluida ? 'Desfazer':'Concluir'}
-            </button>
-
-            {tarefa.concluida ? <del><span>{tarefa.texto} {tarefa.data} {tarefa.descricao} {tarefa.prioridade}</span></del> : <span>{tarefa.texto} {tarefa.data} {tarefa.descricao} {tarefa.prioridade}</span>}
-
-            <button onClick={()=>RemoverTarefa(tarefa.id)}>Excluir</button>
-          </li>
-        ))}
-      </ul>
-      {tarefasFiltradas.length === 0 && <p>Nenhuma tarefa {filtro !== 'todas' ? filtro : 'salva'}</p>}
     </div>
   )
 }
