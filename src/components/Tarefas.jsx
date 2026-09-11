@@ -147,7 +147,7 @@ const Tarefas = () => {
         </button>
 
         <button
-          onClick={() => setFiltro('concluidas')}
+          onClick={() => setFiltro('concluida')}
           disabled={filtro === 'concluidas'}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
             filtro === 'concluidas'
@@ -167,7 +167,7 @@ const Tarefas = () => {
               : 'bg-[#FBF6ED] border border-[#E0D2B8] text-[#7A6752]'
           }`}
         >
-          Pendente
+          Pendentes
         </button>
       </div>
 
